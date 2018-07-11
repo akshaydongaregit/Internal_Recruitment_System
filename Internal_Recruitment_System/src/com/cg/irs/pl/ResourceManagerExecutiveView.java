@@ -5,13 +5,19 @@ import static java.lang.System.out;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
+
+import com.cg.irs.dto.RequisitionBean;
+import com.cg.irs.exception.RecruitmentSystemException;
+import com.cg.irs.service.IRequisitionService;
+import com.cg.irs.service.RequisitionServiceImpl;
 
 public class ResourceManagerExecutiveView implements View{
 
 	BufferedReader in =new BufferedReader( new InputStreamReader(System.in));
-	
+	IRequisitionService requisitionService;
 	public ResourceManagerExecutiveView() {
-		
+		requisitionService = new RequisitionServiceImpl();
 	}
 
 	/*
@@ -41,6 +47,7 @@ public class ResourceManagerExecutiveView implements View{
 				switch(ch)
 				{
 					case 1:
+						viewAllRequisition();
 						break;
 					case 2:
 						break;
@@ -57,6 +64,25 @@ public class ResourceManagerExecutiveView implements View{
 				out.print("\nInvalid Choice");
 			}
 		}
+	}
+	
+	private void viewAllRequisition() {
+		
+		List<RequisitionBean> requisitions;
+		try {
+				requisitions = requisitionService.getAllRequisition();
+			 
+			System.out.println("requisitionId  rmId  projectId  currentStatus  skilldomain  numberRequired");
+			for(RequisitionBean r : requisitions)
+			{
+				System.out.println(requisitions);
+			}
+		}
+		catch (RecruitmentSystemException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+		
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package com.cg.irs.dao;
 
+import java.util.List;
+
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
 
@@ -7,5 +9,5 @@ public interface IRequisitionDao {
 
 	public String insertRequisition(RequisitionBean requisition) 
 			throws RecruitmentSystemException;
-	
+	public List<RequisitionBean> getAllRequisition() throws RecruitmentSystemException;
 }

@@ -12,7 +12,7 @@ public class RequisitionBean {
 	private String rmId;
 	private String projectId;
 	private Timestamp dateCreated ;
-	private LocalDateTime dateClosed;
+	private Timestamp dateClosed;
 	private String currentStatus;
 	private String vacancyName;
 	private String skill;
@@ -38,11 +38,11 @@ public class RequisitionBean {
 	public void setDateCreated(Timestamp dateCreated) {
 		this.dateCreated = dateCreated;
 	}
-	public LocalDateTime getDateClosed() {
+	public Timestamp getDateClosed() {
 		return dateClosed;
 	}
-	public void setDateClosed(LocalDateTime dateClosed) {
-		this.dateClosed = dateClosed;
+	public void setDateClosed(Timestamp timestamp) {
+		this.dateClosed = timestamp;
 	}
 	public String getCurrentStatus() {
 		return currentStatus;
@@ -80,6 +80,11 @@ public class RequisitionBean {
 	public void setRmId(String rmId) {
 		this.rmId = rmId;
 	}
+	@Override
+	public String toString() {
+		return requisitionId+"  "+rmId+"  "+projectId+"  "+currentStatus+"  "+skill+"  "+domain+"  "+numberRequired;
+	}
+	
 
 
 }

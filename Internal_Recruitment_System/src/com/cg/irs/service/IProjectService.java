@@ -7,5 +7,5 @@ import com.cg.irs.exception.RecruitmentSystemException;
 
 public interface IProjectService {
 	public List<ProjectBean> getProjectDetails() throws RecruitmentSystemException;
-
+	
 }

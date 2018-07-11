@@ -1,5 +1,7 @@
 package com.cg.irs.service;
 
+import java.util.List;
+
 import com.cg.irs.dao.IRequisitionDao;
 import com.cg.irs.dao.RequisitionDaoImpl;
 import com.cg.irs.dto.RequisitionBean;
@@ -19,5 +21,13 @@ public class RequisitionServiceImpl implements IRequisitionService{
 		String id = dao.insertRequisition(requisition);
 		return id;
 	}
+
+	@Override
+	public List<RequisitionBean> getAllRequisition()
+			throws RecruitmentSystemException {
+		 return dao.getAllRequisition();	
+	}
+	
+	
 
 }
