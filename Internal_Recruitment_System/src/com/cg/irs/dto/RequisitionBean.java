@@ -82,9 +82,9 @@ public class RequisitionBean {
 	}
 	@Override
 	public String toString() {
-		return requisitionId+"  "+rmId+"  "+projectId+"  "+currentStatus+"  "+skill+"  "+domain+"  "+numberRequired;
+		return requisitionId+"  "+rmId+"  "+projectId+" "+dateCreated+"  "+dateClosed+"  "+currentStatus+" "+vacancyName+"  "+skill+"  "+domain+"  "+numberRequired+"\n";
 	}
-	
+
 
 
 }

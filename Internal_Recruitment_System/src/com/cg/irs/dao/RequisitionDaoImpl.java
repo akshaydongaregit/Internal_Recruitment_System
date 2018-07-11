@@ -91,7 +91,8 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 		try {
 				Statement stmt = con.createStatement();
 				ResultSet rs = stmt.executeQuery(sql);
-				while(rs.next())
+				rs.next();
+				do
 				{
 					RequisitionBean requisition = new RequisitionBean();
 					requisition.setRequisitionId(rs.getString("requisition_id"));
@@ -106,9 +107,52 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 					requisition.setNumberRequired(rs.getInt("number_required"));	
 					
 					list.add(requisition);
-				}
+				}while(rs.next());
 				return list;
-		} catch (Exception e) {
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			throw new RecruitmentSystemException("Requestion Not Found");
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();
+			throw new RecruitmentSystemException(e.getMessage());
+		}
+	}
+
+	@Override
+	public List<RequisitionBean> getSpecificRequisition(String rmId)
+			throws RecruitmentSystemException {
+		String sql ="Select * from Requisition where rm_id='"+rmId+"'";
+		Connection con = DatabaseConnection.getConnection();
+		List<RequisitionBean> list =  new ArrayList<RequisitionBean>();
+		try {
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(sql);
+				rs.next();
+				do
+				{
+					RequisitionBean requisition = new RequisitionBean();
+					requisition.setRequisitionId(rs.getString("requisition_id"));
+					requisition.setRmId(rs.getString("RM_id"));
+					requisition.setProjectId(rs.getString("project_id"));
+					requisition.setDateCreated(rs.getTimestamp("date_created"));
+					requisition.setDateClosed(rs.getTimestamp("date_closed"));
+					requisition.setCurrentStatus(rs.getString("current_status"));
+					requisition.setVacancyName(rs.getString("vacancy_name"));
+					requisition.setSkill(rs.getString("skill"));
+					requisition.setDomain(rs.getString("domain"));
+					requisition.setNumberRequired(rs.getInt("number_required"));	
+					
+					list.add(requisition);
+				}while(rs.next());
+				return list;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new RecruitmentSystemException("No Requestion found for given RM_ID");
+		}
+		catch (Exception e) {
 			
 			e.printStackTrace();
 			throw new RecruitmentSystemException(e.getMessage());

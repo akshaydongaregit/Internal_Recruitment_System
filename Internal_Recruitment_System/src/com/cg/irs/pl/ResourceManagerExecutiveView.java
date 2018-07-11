@@ -50,6 +50,7 @@ public class ResourceManagerExecutiveView implements View{
 						viewAllRequisition();
 						break;
 					case 2:
+						viewSpecificRequisition();
 						break;
 					case 3:
 						return;
@@ -58,7 +59,7 @@ public class ResourceManagerExecutiveView implements View{
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				out.print(e.getMessage());
+				out.print("\n"+e.getMessage());
 			}catch(NumberFormatException e)
 			{
 				out.print("\nInvalid Choice");
@@ -68,22 +69,49 @@ public class ResourceManagerExecutiveView implements View{
 	
 	private void viewAllRequisition() {
 		
-		List<RequisitionBean> requisitions;
+		List<RequisitionBean> requisitionList;
 		try {
-				requisitions = requisitionService.getAllRequisition();
-			 
-			System.out.println("requisitionId  rmId  projectId  currentStatus  skilldomain  numberRequired");
-			for(RequisitionBean r : requisitions)
+			requisitionList = requisitionService.getAllRequisition();
+			Header.printLine(); 
+			System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
+			for(RequisitionBean requisition : requisitionList)
 			{
-				System.out.println(requisitions);
+				System.out.print("\n"+requisition);
 			}
 		}
 		catch (RecruitmentSystemException e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
+		}	
+	}
+	
+	private void viewSpecificRequisition() {
+		
+		List<RequisitionBean> requisitionList;
+		String rmId="";
+		try {
+			System.out.println("Enter RM Id to search Requisition : ");
+			try {
+				rmId = in.readLine();
+			} catch (IOException e) {		
+				e.printStackTrace();
+			}
+			
+			requisitionList = requisitionService.getSpecificRequisition(rmId);
+			Header.printLine(); 
+			System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
+			for(RequisitionBean requisition : requisitionList)
+			{
+				System.out.print("\n"+requisition);
+			}
+		}
+		catch (RecruitmentSystemException e) {
+			e.printStackTrace();
+			System.out.println("\n"+e.getMessage());
 		}
 		
 	}
+	
 
 	@Override
 	public String getMenu() {

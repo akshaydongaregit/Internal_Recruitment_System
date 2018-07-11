@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
@@ -45,7 +46,7 @@ public class ResourceManagerView implements View{
 						raiseRequisition();
 						break;
 					case 2:
-						viewSuggested();
+						viewSuggestedRequesition();
 						break;
 					case 3:
 						return;
@@ -107,8 +108,35 @@ public class ResourceManagerView implements View{
 		
 	}
 
-	private void viewSuggested()
+	private void viewSuggestedRequesition()
 	{
+		try {
+		viewRequisitions();
+		System.out.println("Choose Requesition Id : ");
+			String requesitionId = in.readLine();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	private void viewRequisitions() {
+		try{
+		IRequisitionService requisitionService = new RequisitionServiceImpl();
+		List<RequisitionBean> requisitionList;
+		String rmId=Main.getCurrent().getUserId();		
+			requisitionList = requisitionService.getSpecificRequisition(rmId);
+			Header.printLine(); 
+			System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
+			for(RequisitionBean requisition : requisitionList)
+			{
+				System.out.print("\n"+requisition);
+			}
+		}
+		catch (RecruitmentSystemException e) {
+			e.printStackTrace();
+			System.out.println("\n"+e.getMessage());
+		}
 		
 	}
 	

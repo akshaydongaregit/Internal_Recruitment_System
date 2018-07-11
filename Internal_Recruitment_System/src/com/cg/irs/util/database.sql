@@ -1,9 +1,17 @@
+--Delete Commands
+Delete from assigned_Requisition;
+Delete from Requisition;
+Delete from employee;
+Delete from project;
+Delete from users;
+
 --Drop Commands
-DROP TABLE Assigned;
-DROP TABLE users;
-DROP TABLE project;
-DROP TABLE employee;
+DROP TABLE assigned_Requisition;
 DROP TABLE Requisition;
+DROP TABLE employee;
+DROP TABLE project;
+DROP TABLE users;
+
 
 CREATE TABLE users(
 	users_id VARCHAR2(3) Primary Key,
@@ -46,7 +54,7 @@ CREATE TABLE employee(
  );
  
  
- CREATE TABLE Assigned(
+ CREATE TABLE assigned_Requisition(
  RMG_id VARCHAR2(3) references users(users_id),
  employee_id VARCHAR2(3) references employee(employee_id),
  requisition_id VARCHAR2(3) references Requisition(requisition_id)
