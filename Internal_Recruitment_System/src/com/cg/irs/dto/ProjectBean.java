@@ -1,14 +1,15 @@
 package com.cg.irs.dto;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
+
 
 public class ProjectBean {
 			
 		private String projectId;
 		private String projectName;
 		private String description;
-		private LocalDateTime startDate;
-		private LocalDateTime endDate;
+		private Timestamp startDate;
+		private Timestamp endDate;
 		private String rmId;
 
 	public ProjectBean() {
@@ -38,20 +39,19 @@ public class ProjectBean {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public LocalDateTime getStartDate() {
+	public Timestamp getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(LocalDateTime startDate) {
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
-	public LocalDateTime getEndDate() {
+	public Timestamp getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(LocalDateTime endDate) {
+	public void setEndDate(Timestamp endDate) {
 		this.endDate = endDate;
 	}
 
