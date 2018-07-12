@@ -3,10 +3,14 @@ package com.cg.irs.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.cg.irs.dto.UserBean;
 import com.cg.irs.exception.RecruitmentSystemException;
+import com.cg.irs.pl.Main;
 import com.cg.irs.util.DatabaseConnection;
 
 public class UserDaoImpl implements IUserDao {
@@ -126,6 +130,33 @@ public class UserDaoImpl implements IUserDao {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public List<UserBean> getUsers() throws RecruitmentSystemException {
+		String sql = "Select * from users where users_id  NOT LIKE '"+Main.getCurrent().getUserId()+"'";
+		Connection con = DatabaseConnection.getConnection();
+		List<UserBean> list = new ArrayList<UserBean>();
+		try{
+			Statement stmt = con.createStatement();
+			
+			ResultSet rs = stmt.executeQuery(sql);
+			
+				rs.next();
+				do
+				{
+					UserBean user = new UserBean();
+					user.setUserId(rs.getString("users_id"));
+					user.setPassword(rs.getString("password"));
+					user.setRole(rs.getString("role"));	      
+					list.add(user);
+				}while(rs.next());
+		}catch(Exception e)
+		{
+			//e.printStackTrace();
+			throw new RecruitmentSystemException("No Users Found");
+		}
+		return list;
 	}
 
 }

@@ -4,6 +4,9 @@ import static java.lang.System.out;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
+
+import tbf.formatter.TTable;
 
 import com.cg.irs.dto.UserBean;
 import com.cg.irs.exception.RecruitmentSystemException;
@@ -86,11 +89,21 @@ public class AdminView implements View{
 		}
 	}
 	
+	private void displayUser() throws RecruitmentSystemException
+	{
+		IUserService service = new UserServiceImpl();
+		List<UserBean> users = service.getUsers();
+		TTable<UserBean> table = new TTable<UserBean>();
+		table.addColumn("User Name","userId",10);
+		table.addColumn("Role","role",10);
+		table.printHeader();
+		table.printBeans(users);
+	}
 	private void deleteUser() {
-		
 		String id ;
 		try
 		{
+			displayUser();
 			out.print("\nEnter User Id to Delete : ");
 			id =  in.readLine();
 			

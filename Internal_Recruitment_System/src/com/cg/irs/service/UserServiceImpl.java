@@ -1,5 +1,7 @@
 package com.cg.irs.service;
 
+import java.util.List;
+
 import com.cg.irs.dao.IUserDao;
 import com.cg.irs.dao.UserDaoImpl;
 import com.cg.irs.dto.UserBean;
@@ -44,6 +46,11 @@ public class UserServiceImpl implements IUserService {
 	@Override
 	public boolean deleteUser(String id) throws RecruitmentSystemException {
 		return dao.deleteUser(id);
+	}
+
+	@Override
+	public List<UserBean> getUsers() throws RecruitmentSystemException {
+		return dao.getUsers();
 	}
 
 }
