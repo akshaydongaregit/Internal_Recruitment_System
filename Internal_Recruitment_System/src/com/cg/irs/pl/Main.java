@@ -68,14 +68,17 @@ public class Main {
 			
 			//setting current login user.
 			if(credinals.getRole()!=null)
+			{
 				setCurrent(credinals);
-			
+			}
 		} catch (Exception e) {
 			//e.printStackTrace();
 			out.print("Error : "+e.getMessage()+"\n");
 		}
 		
-		return current.getRole();
+		
+		return current!=null?current.getRole():"";			
+		
 	}
 
 	public static UserBean getCurrent() {

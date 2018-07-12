@@ -2,12 +2,15 @@ package com.cg.irs.pl;
 
 import static java.lang.System.out;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+
+import tbf.formatter.TTable;
 
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
@@ -111,32 +114,50 @@ public class ResourceManagerView implements View{
 	private void viewSuggestedRequesition()
 	{
 		try {
+			//Show Requesition Raised
 		viewRequisitions();
 		System.out.println("Choose Requesition Id : ");
 			String requesitionId = in.readLine();
+		
 			
-		} catch (IOException e) {
+		}
+		catch(RecruitmentSystemException e)
+		{
+			e.printStackTrace();
+			System.out.print("\n"+e.getMessage());	
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
-	private void viewRequisitions() {
-		try{
+	private void viewRequisitions() throws RecruitmentSystemException {
 		IRequisitionService requisitionService = new RequisitionServiceImpl();
 		List<RequisitionBean> requisitionList;
 		String rmId=Main.getCurrent().getUserId();		
 			requisitionList = requisitionService.getSpecificRequisition(rmId);
 			Header.printLine(); 
-			System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
-			for(RequisitionBean requisition : requisitionList)
+			/*System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
+			*/
+			TTable<RequisitionBean> table = new TTable<RequisitionBean>();
+			table.addColumn("RequisitionId","requisitionId",15);
+			table.addColumn("RM Id","rmId",5);
+			table.addColumn("ProjectId","projectId",10);
+			table.addColumn("Date Created", "dateCreated", 20);
+			table.addColumn("Status", "currentStatus", 8);
+			table.addColumn("Vacancy Name", "vacancyName",15);
+			table.addColumn("Skill","skill",20);
+			table.addColumn("Domain","domain",15);
+			table.addColumn("Required","numberRequired",10);
+			
+			table.printHeader();
+			table.printBeans(requisitionList);
+			System.out.print("\n");
+			
+			/*for(RequisitionBean requisition : requisitionList)
 			{
 				System.out.print("\n"+requisition);
-			}
-		}
-		catch (RecruitmentSystemException e) {
-			e.printStackTrace();
-			System.out.println("\n"+e.getMessage());
-		}
+			}*/
 		
 	}
 	

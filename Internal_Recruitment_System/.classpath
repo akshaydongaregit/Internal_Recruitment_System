@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="D:/150662/JAR files/module 2 JAR files/junit-4.6.jar"/>
 	<classpathentry kind="lib" path="D:/150662/JAR files/module 2 JAR files/log4j-1.2.9.jar"/>
 	<classpathentry kind="lib" path="D:/150662/JAR files/module 2 JAR files/ojdbc14.jar"/>
+	<classpathentry kind="lib" path="D:/NOt Mine/Users/sasakhar/Downloads/consoletable.jar"/>
+	<classpathentry kind="lib" path="lib/consoletable.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

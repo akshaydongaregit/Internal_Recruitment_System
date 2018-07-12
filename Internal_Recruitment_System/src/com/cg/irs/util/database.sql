@@ -6,11 +6,16 @@ Delete from project;
 Delete from users;
 
 --Drop Commands
+clear screen;
 DROP TABLE assigned_Requisition;
 DROP TABLE Requisition;
 DROP TABLE employee;
 DROP TABLE project;
 DROP TABLE users;
+DROP sequence user_id_seq;
+DROP sequence requisition_id_seq;
+
+
 
 
 CREATE TABLE users(
@@ -30,7 +35,8 @@ CREATE TABLE project(
  );
 	
 		
-CREATE TABLE employee(
+CREATE TABLE employee
+(
 	employee_id VARCHAR2(3) Primary Key,
 	employee_name VARCHAR2(50),
 	project_id VARCHAR2(3) references project(project_id),
@@ -59,7 +65,7 @@ CREATE TABLE employee(
  employee_id VARCHAR2(3) references employee(employee_id),
  requisition_id VARCHAR2(3) references Requisition(requisition_id)
  );
- 
+
  /* squence for generating ID	*/
  create sequence user_id_seq start with 101 increment by 1;  
  create sequence requisition_id_seq start with 101 increment by 1;

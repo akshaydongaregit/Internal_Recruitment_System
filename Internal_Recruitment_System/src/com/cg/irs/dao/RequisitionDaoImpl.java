@@ -36,12 +36,11 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 			pst.setString(2,requisition.getRmId());
 			pst.setString(3, requisition.getProjectId());
 			pst.setTimestamp(4,requisition.getDateCreated());
-			pst.setTimestamp(5, requisition.getDateCreated());
-			pst.setString(6, requisition.getCurrentStatus());
-			pst.setString(7, requisition.getVacancyName());
-			pst.setString(8, requisition.getSkill());
-			pst.setString(9, requisition.getDomain());
-			pst.setInt(10,requisition.getNumberRequired());
+			pst.setString(5, requisition.getCurrentStatus());
+			pst.setString(6, requisition.getVacancyName());
+			pst.setString(7, requisition.getSkill());
+			pst.setString(8, requisition.getDomain());
+			pst.setInt(9,requisition.getNumberRequired());
 
 			int res = pst.executeUpdate();
 			if(res>0)
