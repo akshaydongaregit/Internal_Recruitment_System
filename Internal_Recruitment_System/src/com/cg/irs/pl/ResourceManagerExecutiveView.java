@@ -5,10 +5,19 @@ import static java.lang.System.out;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
+import tbf.formatter.TTable;
+
+import com.cg.irs.dto.AssignedRequisitionBean;
+import com.cg.irs.dto.EmployeeBean;
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
+import com.cg.irs.service.AssignedRequisitionServiceImpl;
+import com.cg.irs.service.EmployeeServiceImpl;
+import com.cg.irs.service.IAssignedRequisitionService;
+import com.cg.irs.service.IEmployeeService;
 import com.cg.irs.service.IRequisitionService;
 import com.cg.irs.service.RequisitionServiceImpl;
 
@@ -72,12 +81,11 @@ public class ResourceManagerExecutiveView implements View{
 		List<RequisitionBean> requisitionList;
 		try {
 			requisitionList = requisitionService.getAllRequisition();
-			Header.printLine(); 
-			System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
-			for(RequisitionBean requisition : requisitionList)
-			{
-				System.out.print("\n"+requisition);
-			}
+			printRequistionTable(requisitionList);
+			
+			//Sending List for Processing Requisitions by RMGE . 
+			processRequisition(requisitionList);
+			
 		}
 		catch (RecruitmentSystemException e) {
 			e.printStackTrace();
@@ -98,12 +106,10 @@ public class ResourceManagerExecutiveView implements View{
 			}
 			
 			requisitionList = requisitionService.getSpecificRequisition(rmId);
-			Header.printLine(); 
-			System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
-			for(RequisitionBean requisition : requisitionList)
-			{
-				System.out.print("\n"+requisition);
-			}
+			printRequistionTable(requisitionList);
+			
+			//Sending List for Processing Requisitions by RMGE . 
+			processRequisition(requisitionList);
 		}
 		catch (RecruitmentSystemException e) {
 			e.printStackTrace();
@@ -112,7 +118,6 @@ public class ResourceManagerExecutiveView implements View{
 		
 	}
 	
-
 	@Override
 	public String getMenu() {
 		String menu =""
@@ -122,4 +127,170 @@ public class ResourceManagerExecutiveView implements View{
 		return menu;
 	}
 
+	public void printRequistionTable(List<RequisitionBean> requisitionList)
+	{
+		Header.printLine(); 
+		TTable<RequisitionBean> table = new TTable<RequisitionBean>();
+		table.addColumn("RequisitionId","requisitionId",15);
+		table.addColumn("RM Id","rmId",5);
+		table.addColumn("ProjectId","projectId",10);
+		table.addColumn("Date Created", "dateCreated", 20);
+		table.addColumn("Status", "currentStatus", 8);
+		table.addColumn("Vacancy Name", "vacancyName",15);
+		table.addColumn("Skill","skill",20);
+		table.addColumn("Domain","domain",15);
+		table.addColumn("Required","numberRequired",10);
+		
+		table.printHeader();
+		table.printBeans(requisitionList);
+		System.out.print("\n");
+	}
+	
+	/********************************************************************
+	 	Module for Processing  Requisition.
+	 
+	 ********************************************************************/
+	public void processRequisition(List<RequisitionBean> requisitionList)
+	{
+		IEmployeeService employeeService = new EmployeeServiceImpl();
+		IAssignedRequisitionService assignedRequisitionService = new AssignedRequisitionServiceImpl();
+		
+		try {
+			System.out.print("\nEnter Requistion Id To Process : ");
+			String reqId = in.readLine();
+			
+			RequisitionBean requisition = null;
+			
+			for(RequisitionBean req : requisitionList)
+			{
+				if(req.getRequisitionId().equals(reqId))
+				{
+					requisition = req;
+					break;
+				}
+			}
+			
+			if(requisition==null)
+			{
+				System.out.print("\nNo Requistion Found for Id "+reqId+"in List");
+			}else
+			{
+				List<EmployeeBean> employeeList = employeeService.getMatchingEmployeeList(requisition);
+				printEmployeeList(employeeList);
+				
+				/* Checking for required Employee number */
+				if(requisition.getNumberRequired()>employeeList.size())
+				{
+					System.out.print("\nNot Enough Matching Employees to Complete the Requisition.\n\tNow Exiting...");
+					return ;
+				}
+				
+				/* Selecting Employees */
+				List<EmployeeBean> selectedList = new ArrayList<EmployeeBean>();
+				
+				System.out.print("\nEnter \nEmployee Id to Select Employee."
+						+ "\nS/s to submit. \nD/d to Discard.");
+				int requiredCount = requisition.getNumberRequired();
+				
+				while(true)
+				{
+					System.out.println("\n["+requiredCount+"]\nEnter Response : ");
+					String response = in.readLine();
+					
+						switch (response) {
+						case "s":
+						case "S":
+							if(requiredCount>0)
+							{
+								System.out.print(requiredCount+" more Employees Requiered!");
+							}else
+							{
+								System.out.print("\nSubmitting...");
+								for(EmployeeBean emp : selectedList)
+								{
+									
+									AssignedRequisitionBean assigned = new AssignedRequisitionBean();
+									assigned.setEmployeeId(emp.getEmployeeId());
+									assigned.setRequisitionId(requisition.getRequisitionId());
+									assigned.setRmgeId(Main.getCurrent().getUserId());
+									
+									assignedRequisitionService.insertAssignedRequisition(assigned);
+									employeeService.changeStatus(emp.getEmployeeId(),"ASSIGNED");
+									
+									System.out.print("\n "+emp.getEmployeeId()+" Added. ");
+								}
+								
+								System.out.print("\n** Requisition Processed SuccessFully **");
+								return ;
+							}
+							break;
+						case "d":
+						case "D":
+							System.out.print("\nAll Changes Discarded \n \t Now Exiting...");
+							return ;
+	
+						default:
+								EmployeeBean emp = findEmployee(employeeList, response);
+								if(emp!=null)
+								{
+									//swap
+									selectedList.add(emp);
+									employeeList.remove(emp);
+									requiredCount--;
+									
+									System.out.print(" selected list : "+selectedList.size()+" employee list : "+employeeList.size());
+									
+									System.out.print("\nEmployee "+response+" is Added to Selected.");
+								}
+								else if(findEmployee(employeeList, response)!=null)
+								{
+									System.out.print("\nEmployee "+response+" is Allready Selected.");
+								}
+								else
+								{
+									System.out.print("\nEmployee With Id "+response+" is Not Available to Select.");
+								}
+									
+							break;
+						}
+					
+				}
+			}
+			
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (RecruitmentSystemException e) {
+			e.printStackTrace();
+			System.out.print("\n"+e.getMessage());
+		}
+		
+	}
+
+	public EmployeeBean findEmployee(List<EmployeeBean> employeeList,String id)
+	{
+	
+		for(EmployeeBean emp : employeeList)
+			if(emp.getEmployeeId().equalsIgnoreCase(id))
+				return emp;
+			
+		return null;
+	}
+	public void printEmployeeList(List<EmployeeBean> employeeList)
+	{
+		//employee_id,employee_name,project_id,skill,domain,experience_yrs
+		Header.printLine(); 
+		TTable<EmployeeBean> table = new TTable<EmployeeBean>();
+		table.addColumn("Employee_Id","employeeId",15);
+		table.addColumn("Employee Name","employeeName",15);
+		table.addColumn("Project Id", "projectId", 15);
+		table.addColumn("Skill", "skill", 15);
+		table.addColumn("Domain","domain",15);
+		table.addColumn("Experience Year", "experienceYears", 15);
+		table.printHeader();
+		table.printBeans(employeeList);
+		System.out.print("\n");
+		
+	}
 }

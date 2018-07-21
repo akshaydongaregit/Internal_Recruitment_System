@@ -33,6 +33,12 @@ public class RequisitionServiceImpl implements IRequisitionService{
 			throws RecruitmentSystemException {
 		return dao.getSpecificRequisition(rmId);
 	}
+
+	@Override
+	public List<RequisitionBean> getAssignedRequisitionList(String rmId)
+			throws RecruitmentSystemException {
+		return dao.getAssignedRequisitionList(rmId);
+	}
 	
 	
 

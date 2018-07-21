@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
+import com.cg.irs.pl.Main;
 import com.cg.irs.util.DatabaseConnection;
 
 public class RequisitionDaoImpl implements IRequisitionDao{
@@ -157,5 +158,49 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 			throw new RecruitmentSystemException(e.getMessage());
 		}
 	}
+
+	@Override
+	public List<RequisitionBean> getAssignedRequisitionList(String rmId)
+			throws RecruitmentSystemException {
+		
+		String sql ="Select distinct r.* from Requisition r,assigned_Requisition ar "
+				+ " where r.requisition_id=ar.requisition_id and r.rm_id=?";
+		Connection con = DatabaseConnection.getConnection();
+		List<RequisitionBean> list =  new ArrayList<RequisitionBean>();
+		try {
+				PreparedStatement st = con.prepareStatement(sql);
+				st.setString(1, rmId);
+				
+				ResultSet rs = st.executeQuery();
+				rs.next();
+				do
+				{
+					RequisitionBean requisition = new RequisitionBean();
+					requisition.setRequisitionId(rs.getString("requisition_id"));
+					requisition.setRmId(rs.getString("RM_id"));
+					requisition.setProjectId(rs.getString("project_id"));
+					requisition.setDateCreated(rs.getTimestamp("date_created"));
+					requisition.setDateClosed(rs.getTimestamp("date_closed"));
+					requisition.setCurrentStatus(rs.getString("current_status"));
+					requisition.setVacancyName(rs.getString("vacancy_name"));
+					requisition.setSkill(rs.getString("skill"));
+					requisition.setDomain(rs.getString("domain"));
+					requisition.setNumberRequired(rs.getInt("number_required"));	
+					
+					list.add(requisition);
+				}while(rs.next());
+				
+				return list;
+		}catch (SQLException e) {
+			e.printStackTrace();
+			throw new RecruitmentSystemException("No Assigned Requestion found for given RM_ID");
+		}
+		catch (Exception e) {
+			
+			e.printStackTrace();
+			throw new RecruitmentSystemException(e.getMessage());
+		}
+	}
+	
 	
 }

@@ -115,10 +115,11 @@ public class ResourceManagerView implements View{
 	{
 		try {
 			//Show Requesition Raised
+			
 		viewRequisitions();
 		System.out.println("Choose Requesition Id : ");
 			String requesitionId = in.readLine();
-		
+			
 			
 		}
 		catch(RecruitmentSystemException e)
@@ -132,13 +133,13 @@ public class ResourceManagerView implements View{
 		
 	}
 	private void viewRequisitions() throws RecruitmentSystemException {
+		
 		IRequisitionService requisitionService = new RequisitionServiceImpl();
+		
 		List<RequisitionBean> requisitionList;
 		String rmId=Main.getCurrent().getUserId();		
-			requisitionList = requisitionService.getSpecificRequisition(rmId);
+			requisitionList = requisitionService.getAssignedRequisitionList(rmId);
 			Header.printLine(); 
-			/*System.out.print("\nrequisitionId  rmId  projectId  dateCreated  dateClosed  currentStatus  vacancyName  skilldomain  numberRequired");
-			*/
 			TTable<RequisitionBean> table = new TTable<RequisitionBean>();
 			table.addColumn("RequisitionId","requisitionId",15);
 			table.addColumn("RM Id","rmId",5);
@@ -153,11 +154,7 @@ public class ResourceManagerView implements View{
 			table.printHeader();
 			table.printBeans(requisitionList);
 			System.out.print("\n");
-			
-			/*for(RequisitionBean requisition : requisitionList)
-			{
-				System.out.print("\n"+requisition);
-			}*/
+
 		
 	}
 	
