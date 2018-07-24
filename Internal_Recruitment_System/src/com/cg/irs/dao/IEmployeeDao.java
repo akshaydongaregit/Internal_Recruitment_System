@@ -10,5 +10,6 @@ public interface IEmployeeDao {
 
 	public List<EmployeeBean> getMatchingEmployeeList(RequisitionBean requisition) throws RecruitmentSystemException;
 	public int updateProjectId(String empId,String projectId) throws RecruitmentSystemException;
-
+	public List<EmployeeBean> getEmployeeListByIdList(List<String> idList) throws RecruitmentSystemException;
+	public EmployeeBean getEmployeeById(String id) throws RecruitmentSystemException;
 }

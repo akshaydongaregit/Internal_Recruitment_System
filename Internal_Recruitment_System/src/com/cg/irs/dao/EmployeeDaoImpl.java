@@ -68,4 +68,62 @@ public class EmployeeDaoImpl implements IEmployeeDao{
 		}
 	}
 
+	@Override
+	public List<EmployeeBean> getEmployeeListByIdList(List<String> idList)
+			throws RecruitmentSystemException {
+		
+		List<EmployeeBean> list = new ArrayList<EmployeeBean>();
+		
+		try
+		{
+			
+			
+			for(String id:idList)
+			{
+				EmployeeBean emp = getEmployeeById(id);
+				list.add(emp);
+			}
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new RecruitmentSystemException("No Employee Found "+e);
+		}
+		
+		return list;
+	}
+
+	public EmployeeBean getEmployeeById(String id) throws RecruitmentSystemException
+	{
+		Connection con = DatabaseConnection.getConnection();
+		
+		String sql = "select * from employee where employee_id=?";
+		
+		try
+		{
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1,id);
+			
+			ResultSet res = st.executeQuery();
+			
+			if(res.next())
+			{
+				EmployeeBean emp = new EmployeeBean();
+				emp.setEmployeeId(res.getString("employee_id"));
+				emp.setEmployeeName(res.getString("employee_name"));
+				emp.setProjectId(res.getString("project_id"));
+				emp.setDomain(res.getString("domain"));
+				emp.setSkill(res.getString("skill"));
+				emp.setExperienceYears(res.getInt("experience_yrs"));
+				
+				return emp;
+			}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+			throw new RecruitmentSystemException("No Employee Found "+e);
+		}
+		
+		return null;
+	}
 }

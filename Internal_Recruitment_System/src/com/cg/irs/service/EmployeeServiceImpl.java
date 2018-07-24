@@ -34,4 +34,16 @@ public class EmployeeServiceImpl implements IEmployeeService{
 		return dao.updateProjectId(empId, status);
 	}
 
+	@Override
+	public List<EmployeeBean> getEmployeeListByIdList(List<String> idList)
+			throws RecruitmentSystemException {
+		return dao.getEmployeeListByIdList(idList);
+	}
+
+	@Override
+	public EmployeeBean getEmployeeById(String id)
+			throws RecruitmentSystemException {
+		return dao.getEmployeeById(id);
+	}
+
 }

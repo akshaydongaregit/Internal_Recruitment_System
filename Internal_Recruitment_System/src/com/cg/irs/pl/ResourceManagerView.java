@@ -3,17 +3,33 @@ package com.cg.irs.pl;
 import static java.lang.System.out;
 
 
+
+
+
+
+
+
+
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import tbf.formatter.TTable;
 
+import com.cg.irs.dto.AssignedRequisitionBean;
+import com.cg.irs.dto.EmployeeBean;
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
+import com.cg.irs.service.AssignedRequisitionServiceImpl;
+import com.cg.irs.service.EmployeeServiceImpl;
+import com.cg.irs.service.IAssignedRequisitionService;
+import com.cg.irs.service.IEmployeeService;
 import com.cg.irs.service.IRequisitionService;
 import com.cg.irs.service.RequisitionServiceImpl;
 
@@ -21,6 +37,7 @@ public class ResourceManagerView implements View{
 
 	BufferedReader in =new BufferedReader( new InputStreamReader(System.in));
 
+	
 	public ResourceManagerView() {
 	}
 
@@ -114,12 +131,16 @@ public class ResourceManagerView implements View{
 	private void viewSuggestedRequesition()
 	{
 		try {
-			//Show Requesition Raised
 			
-		viewRequisitions();
-		System.out.println("Choose Requesition Id : ");
+			//Show Requesition Raised
+			List<RequisitionBean> reqList = viewRequisitions();
+			
+			System.out.println("Choose Requesition Id : ");
 			String requesitionId = in.readLine();
 			
+			for(RequisitionBean req:reqList)
+				if(requesitionId.equals(req.getRequisitionId()))
+					processRequisition(req);
 			
 		}
 		catch(RecruitmentSystemException e)
@@ -132,7 +153,124 @@ public class ResourceManagerView implements View{
 		}
 		
 	}
-	private void viewRequisitions() throws RecruitmentSystemException {
+	
+	private void processRequisition(RequisitionBean requisition)
+	{
+		/*System.out.println("printing list for "+requisition.getRequisitionId());
+		*/
+		IAssignedRequisitionService assignedService = new AssignedRequisitionServiceImpl();
+		IEmployeeService employeeService = new EmployeeServiceImpl();
+		try {
+			
+			List<String> empIdList = assignedService.getEmployeeIdsByRequisitionId(requisition.getRequisitionId());
+			List<EmployeeBean> empList = employeeService.getEmployeeListByIdList(empIdList);
+			/* Selecting Employees */
+			List<EmployeeBean> selectedList = new ArrayList<EmployeeBean>();
+			
+			printEmployeeList(empList);
+			
+			/51
+			
+			/*Actual Selecting process of employees*/
+			System.out.print("\nEnter \nEmployee Id to Select Employee."
+					+ "\nS/s to submit. \nD/d to Discard.");
+			int requiredCount = requisition.getNumberRequired();
+			
+			while(true)
+			{
+				if(requiredCount==0)
+					
+				System.out.println("\n["+requiredCount+"]\nEnter Response : ");
+				String response = in.readLine();
+				
+					switch (response) {
+					case "s":
+					case "S":
+						if(requiredCount>0)
+						{
+							System.out.print(requiredCount+" more Employees Requiered!");
+						}else
+						{
+							
+							System.out.print("\n** Requisition Processed SuccessFully **");
+							return ;
+						}
+						break;
+					case "d":
+					case "D":
+						System.out.print("\nAll Changes Discarded \n \t Now Exiting...");
+						return ;
+
+					default:
+							EmployeeBean emp = findEmployee(employeeList, response);
+							if(emp!=null)
+							{
+								//swap
+								selectedList.add(emp);
+								employeeList.remove(emp);
+								requiredCount--;
+								
+								System.out.print(" selected list : "+selectedList.size()+" employee list : "+employeeList.size());
+								
+								System.out.print("\nEmployee "+response+" is Added to Selected.");
+							}
+							else if(findEmployee(employeeList, response)!=null)
+							{
+								System.out.print("\nEmployee "+response+" is Allready Selected.");
+							}
+							else
+							{
+								System.out.print("\nEmployee With Id "+response+" is Not Available to Select.");
+							}
+								
+						break;
+					}
+				
+			}
+			
+		} catch (RecruitmentSystemException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private boolean saveList(List<EmployeeBean> empList,)
+	{
+		System.out.print("\nSubmitting...");
+		for(EmployeeBean emp : selectedList)
+		{
+			
+			AssignedRequisitionBean assigned = new AssignedRequisitionBean();
+			assigned.setEmployeeId(emp.getEmployeeId());
+			assigned.setRequisitionId(requisition.getRequisitionId());
+			assigned.setRmgeId(Main.getCurrent().getUserId());
+			
+			assignedRequisitionService.insertAssignedRequisition(assigned);
+			employeeService.changeStatus(emp.getEmployeeId(),"ASSIGNED");
+			
+			System.out.print("\n "+emp.getEmployeeId()+" Added. ");
+		}
+		
+		return true;
+	}
+	private void printEmployeeList(List<EmployeeBean> employeeList)
+	{
+		//employee_id,employee_name,project_id,skill,domain,experience_yrs
+		Header.printLine(); 
+		TTable<EmployeeBean> table = new TTable<EmployeeBean>();
+		table.addColumn("Employee_Id","employeeId",15);
+		table.addColumn("Employee Name","employeeName",15);
+		table.addColumn("Project Id", "projectId", 15);
+		table.addColumn("Skill", "skill", 15);
+		table.addColumn("Domain","domain",15);
+		table.addColumn("Experience Year", "experienceYears", 15);
+		table.printHeader();
+		table.printBeans(employeeList);
+		System.out.print("\n");
+		
+	}
+	
+	private List<RequisitionBean> viewRequisitions() throws RecruitmentSystemException {
 		
 		IRequisitionService requisitionService = new RequisitionServiceImpl();
 		
@@ -155,7 +293,7 @@ public class ResourceManagerView implements View{
 			table.printBeans(requisitionList);
 			System.out.print("\n");
 
-		
+		return requisitionList;
 	}
 	
 	@Override
