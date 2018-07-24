@@ -81,7 +81,7 @@ public class ResourceManagerView implements View{
 						out.print("\nInvalid choice");
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				out.print(e.getMessage());
 			}catch(NumberFormatException e)
 			{
@@ -152,7 +152,7 @@ public class ResourceManagerView implements View{
 		}
 		catch(RecruitmentSystemException e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.print("\n"+e.getMessage());	
 		}
 		catch (IOException e) {
@@ -225,6 +225,7 @@ public class ResourceManagerView implements View{
 			
 		} catch (RecruitmentSystemException e) {
 			e.printStackTrace();
+			out.print("\n"+e.getMessage());
 		}
 		
 	}
@@ -241,7 +242,7 @@ public class ResourceManagerView implements View{
 	private boolean saveList(List<EmployeeBean> selectedList,RequisitionBean requisition) throws RecruitmentSystemException
 	{
 		
-		System.out.print("\nSubmitting...");
+		//System.out.print("\nSubmitting...");
 		String requisitionId = requisition.getRequisitionId();
 		
 		for(EmployeeBean emp : selectedList)
@@ -249,12 +250,12 @@ public class ResourceManagerView implements View{
 			
 			employeeService.updateProjectId(emp.getEmployeeId(),requisitionId);
 			assignedService.deleteAssignedRequisition(requisitionId,emp.getEmployeeId());
-			System.out.print("\n"+emp.getEmployeeId()+" Added. ");
+			//System.out.print("\n"+emp.getEmployeeId()+" Added. ");
 		}
 		
 		requisitionService.updateStatus(requisitionId, "CLOSED");
 		
-		
+		out.print("** Requisition Processed Successfully. **");
 		return true;
 	}
 	

@@ -67,10 +67,11 @@ public class ResourceManagerExecutiveView implements View{
 						out.print("\nInvalid choice");
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				out.print("\n"+e.getMessage());
 			}catch(NumberFormatException e)
 			{
+				//e.printStackTrace();
 				out.print("\nInvalid Choice");
 			}
 		}
@@ -88,7 +89,7 @@ public class ResourceManagerExecutiveView implements View{
 			
 		}
 		catch (RecruitmentSystemException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println(e.getMessage());
 		}	
 	}
@@ -112,7 +113,7 @@ public class ResourceManagerExecutiveView implements View{
 			processRequisition(requisitionList);
 		}
 		catch (RecruitmentSystemException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.println("\n"+e.getMessage());
 		}
 		
@@ -205,7 +206,7 @@ public class ResourceManagerExecutiveView implements View{
 								System.out.print(requiredCount+" more Employees Requiered!");
 							}else
 							{
-								System.out.print("\nSubmitting...");
+								//System.out.print("\nSubmitting...");
 								for(EmployeeBean emp : selectedList)
 								{
 									
@@ -217,7 +218,7 @@ public class ResourceManagerExecutiveView implements View{
 									assignedRequisitionService.insertAssignedRequisition(assigned);
 									employeeService.changeStatus(emp.getEmployeeId(),"ASSIGNED");
 									
-									System.out.print("\n "+emp.getEmployeeId()+" Added. ");
+									//System.out.print("\n "+emp.getEmployeeId()+" Added. ");
 								}
 								
 								System.out.print("\n** Requisition Processed SuccessFully **");
@@ -262,7 +263,7 @@ public class ResourceManagerExecutiveView implements View{
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (RecruitmentSystemException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			System.out.print("\n"+e.getMessage());
 		}
 		

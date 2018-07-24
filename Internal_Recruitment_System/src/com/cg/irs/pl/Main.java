@@ -1,11 +1,13 @@
 package com.cg.irs.pl;
+
 import static java.lang.System.out;
-
-
-
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
 
 import com.cg.irs.dao.IProjectDao;
 import com.cg.irs.dao.ProjectDaoImpl;
@@ -20,8 +22,11 @@ public class Main {
 	public Main() {
 	}
 
+	private static Logger log = Logger.getLogger(Main.class);
+	
 	public static void main(String[] args) 
 	{
+		PropertyConfigurator.configure("resources\\log4j.properties");
 		
 		//Print Application Header.
 		
@@ -45,6 +50,7 @@ public class Main {
 	
 	public static String loginUser()
 	{
+		log.info("Trying to Login...");
 		
 		BufferedReader in =new BufferedReader( new InputStreamReader(System.in));
 		String userName;
@@ -70,9 +76,19 @@ public class Main {
 			if(credinals.getRole()!=null)
 			{
 				setCurrent(credinals);
+				
+				log.debug("Logined User : "+credinals.getUserId()+" as "+credinals.getRole());
+			}else
+			{
+				log.info("Login Failed for User : "+credinals.getUserId());
 			}
+			
 		} catch (Exception e) {
+			
 			//e.printStackTrace();
+			
+			log.error("Login Failed : ",e);
+			
 			out.print("Error : "+e.getMessage()+"\n");
 		}
 		
