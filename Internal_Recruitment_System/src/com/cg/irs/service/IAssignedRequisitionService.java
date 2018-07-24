@@ -9,4 +9,5 @@ public interface IAssignedRequisitionService {
 
 	public int insertAssignedRequisition(AssignedRequisitionBean requisition) throws RecruitmentSystemException;
 	public List<String> getEmployeeIdsByRequisitionId(String requisitionId) throws RecruitmentSystemException;
+	public int deleteAssignedRequisition(String requisitionId,String employeeId) throws RecruitmentSystemException;
 }

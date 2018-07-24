@@ -67,4 +67,29 @@ public class AssignedRequisitionDaoImpl implements IAssignedRequisitionDao {
 		return list;
 	}
 
+	@Override
+	public int deleteAssignedRequisition(String requisitionId,String empId)
+			throws RecruitmentSystemException {
+		
+		Connection con = DatabaseConnection.getConnection();
+		
+		String sql = "delete from assigned_requisition where requisition_id=? and employee_id=?";
+		
+		try {
+			
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1,requisitionId);
+			st.setString(2, empId);
+			
+			int rs = st.executeUpdate();
+			
+			return rs;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RecruitmentSystemException(" Unable Delete Assigned Requisition : "+e.getMessage());
+		}
+		
+	}
+
 }

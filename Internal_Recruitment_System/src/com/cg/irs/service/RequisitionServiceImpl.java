@@ -39,6 +39,13 @@ public class RequisitionServiceImpl implements IRequisitionService{
 			throws RecruitmentSystemException {
 		return dao.getAssignedRequisitionList(rmId);
 	}
+
+	@Override
+	public void updateStatus(String id, String status)
+			throws RecruitmentSystemException {
+		
+		dao.updateStatus(id, status);
+	}
 	
 	
 

@@ -12,5 +12,6 @@ public interface IRequisitionDao {
 	public List<RequisitionBean> getAllRequisition() throws RecruitmentSystemException;
 	public List<RequisitionBean> getSpecificRequisition(String rmId) throws RecruitmentSystemException;
 	public List<RequisitionBean> getAssignedRequisitionList(String rmId) throws RecruitmentSystemException;
+	public void updateStatus(String id,String status) throws RecruitmentSystemException;
 	
 }

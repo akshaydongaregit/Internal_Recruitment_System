@@ -201,6 +201,27 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 			throw new RecruitmentSystemException(e.getMessage());
 		}
 	}
+
+	@Override
+	public void updateStatus(String id, String status)
+			throws RecruitmentSystemException {
+		
+		String sql = "update requisition set current_status = ? where requisition_id = ?";
+		Connection con = DatabaseConnection.getConnection();
+		try {
+			PreparedStatement st = con.prepareStatement(sql);
+			st.setString(1,status);
+			st.setString(2,id);
+			int rs = st.executeUpdate();
+			
+			return ;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RecruitmentSystemException("Unable to update requisition Status : "+e.getMessage());
+		}
+		
+	}
 	
 	
 }

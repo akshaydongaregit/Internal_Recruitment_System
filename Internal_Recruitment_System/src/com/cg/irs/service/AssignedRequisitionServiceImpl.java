@@ -25,5 +25,10 @@ public class AssignedRequisitionServiceImpl implements IAssignedRequisitionServi
 			throws RecruitmentSystemException {
 		return dao.getEmployeeIdsByRequisitionId(requisitionId);
 	}
+	@Override
+	public int deleteAssignedRequisition(String requisitionId,String employeeId)
+			throws RecruitmentSystemException {
+		return dao.deleteAssignedRequisition(requisitionId,employeeId);
+	}
 
 }
