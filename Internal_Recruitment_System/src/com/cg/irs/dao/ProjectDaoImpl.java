@@ -17,13 +17,12 @@ public class ProjectDaoImpl implements IProjectDao{
 	}
 
 		public List<ProjectBean> getProjectDetails() throws RecruitmentSystemException {
-			String sql ="Select * from project";
+			String sql ="Select * from project where project_id not in ('RMG','ASSIGNED')";
 			try {
 				List<ProjectBean> list = new ArrayList<ProjectBean>();
 				Connection conn = DatabaseConnection.getConnection();
 				Statement stmt = conn.createStatement();
 				ResultSet rs = stmt.executeQuery(sql);
-				
 				while(rs.next())
 				{
 					ProjectBean project = new ProjectBean();
@@ -37,8 +36,7 @@ public class ProjectDaoImpl implements IProjectDao{
 				}
 				return list;
 			} catch (SQLException e) {
-				e.printStackTrace();
-				throw new RecruitmentSystemException(e.getMessage());
+				throw new RecruitmentSystemException("No Project Found");
 			}	
 			
 		}

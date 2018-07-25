@@ -16,7 +16,6 @@ public class AssignedRequisitionDaoImpl implements IAssignedRequisitionDao {
 	@Override
 	public int insertAssignedRequisition(AssignedRequisitionBean requisition)
 			throws RecruitmentSystemException {
-		System.out.println("inserting in assigned");
 		
 		Connection con = DatabaseConnection.getConnection();
 		
@@ -31,7 +30,6 @@ public class AssignedRequisitionDaoImpl implements IAssignedRequisitionDao {
 			st.executeUpdate();
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
 			throw new RecruitmentSystemException(" Unable to Assign Requisition.");
 		}
 		

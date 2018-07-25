@@ -28,23 +28,25 @@ public class Main {
 	{
 		PropertyConfigurator.configure("resources\\log4j.properties");
 		
-		//Print Application Header.
 		
 		while(true)
-		switch(loginUser())
 		{
-			case "ADMIN":
-					new AdminView().present();
-				break;
-			case "RMGE":
-					new ResourceManagerExecutiveView().present();
-				break;
-			case "RM":
-					new ResourceManagerView().present();
-				break;
-			case "EMPLOYEE":
-					new EmployeeView().present();
-				break;
+			current=null;
+			switch(loginUser())
+			{	
+				case "ADMIN":
+						new AdminView().present();
+					break;
+				case "RMGE":
+						new ResourceManagerExecutiveView().present();
+					break;
+				case "RM":
+						new ResourceManagerView().present();
+					break;
+				case "EMPLOYEE":
+						new EmployeeView().present();
+					break;
+			}
 		}
 	}
 	

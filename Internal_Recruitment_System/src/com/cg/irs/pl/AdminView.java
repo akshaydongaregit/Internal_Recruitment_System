@@ -50,7 +50,7 @@ public class AdminView implements View{
 						out.print("\nInvalid choice");
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				out.print(e.getMessage());
 			}catch(NumberFormatException e)
 			{
@@ -83,9 +83,11 @@ public class AdminView implements View{
 					+ "\nAssigned Role : "+user.getRole());
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("Invalid Data");
 		} catch (RecruitmentSystemException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
 	}
 	

@@ -218,9 +218,10 @@ public class ResourceManagerExecutiveView implements View{
 									assignedRequisitionService.insertAssignedRequisition(assigned);
 									employeeService.changeStatus(emp.getEmployeeId(),"ASSIGNED");
 									
-									//System.out.print("\n "+emp.getEmployeeId()+" Added. ");
+									System.out.print("\n "+emp.getEmployeeId()+" Added. ");
 								}
 								
+								requisitionService.updateStatus(requisition.getRequisitionId(),"ASSIGNED");
 								System.out.print("\n** Requisition Processed SuccessFully **");
 								return ;
 							}

@@ -85,7 +85,7 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 	public List<RequisitionBean> getAllRequisition()
 			throws RecruitmentSystemException {
 		
-		String sql ="Select * from Requisition";
+		String sql ="Select * from Requisition where current_status='OPEN'";
 		Connection con = DatabaseConnection.getConnection();
 		List<RequisitionBean> list =  new ArrayList<RequisitionBean>();
 		try {
@@ -111,12 +111,12 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 				return list;
 		}
 		catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RecruitmentSystemException("Requestion Not Found");
 		}
 		catch (Exception e) {
 			
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RecruitmentSystemException(e.getMessage());
 		}
 	}
@@ -124,7 +124,7 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 	@Override
 	public List<RequisitionBean> getSpecificRequisition(String rmId)
 			throws RecruitmentSystemException {
-		String sql ="Select * from Requisition where rm_id='"+rmId+"'";
+		String sql ="Select * from Requisition where rm_id='"+rmId+"' and current_status='OPEN'";
 		Connection con = DatabaseConnection.getConnection();
 		List<RequisitionBean> list =  new ArrayList<RequisitionBean>();
 		try {
@@ -149,7 +149,7 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 				}while(rs.next());
 				return list;
 		}catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RecruitmentSystemException("No Requestion found for given RM_ID");
 		}
 		catch (Exception e) {
@@ -192,7 +192,7 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 				
 				return list;
 		}catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			throw new RecruitmentSystemException("No Assigned Requestion found for given RM_ID");
 		}
 		catch (Exception e) {
@@ -212,7 +212,7 @@ public class RequisitionDaoImpl implements IRequisitionDao{
 			PreparedStatement st = con.prepareStatement(sql);
 			st.setString(1,status);
 			st.setString(2,id);
-			int rs = st.executeUpdate();
+			st.executeUpdate();
 			
 			return ;
 			

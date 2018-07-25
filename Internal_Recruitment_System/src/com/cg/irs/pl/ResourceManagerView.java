@@ -13,6 +13,11 @@ import static java.lang.System.out;
 
 
 
+
+
+
+
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,13 +30,16 @@ import tbf.formatter.TTable;
 
 import com.cg.irs.dto.AssignedRequisitionBean;
 import com.cg.irs.dto.EmployeeBean;
+import com.cg.irs.dto.ProjectBean;
 import com.cg.irs.dto.RequisitionBean;
 import com.cg.irs.exception.RecruitmentSystemException;
 import com.cg.irs.service.AssignedRequisitionServiceImpl;
 import com.cg.irs.service.EmployeeServiceImpl;
 import com.cg.irs.service.IAssignedRequisitionService;
 import com.cg.irs.service.IEmployeeService;
+import com.cg.irs.service.IProjectService;
 import com.cg.irs.service.IRequisitionService;
+import com.cg.irs.service.ProjectServiceImpl;
 import com.cg.irs.service.RequisitionServiceImpl;
 
 public class ResourceManagerView implements View{
@@ -40,12 +48,14 @@ public class ResourceManagerView implements View{
 	private IAssignedRequisitionService assignedService ;
 	private IEmployeeService employeeService ;
 	private IRequisitionService requisitionService;
-	
+	private IProjectService projectService;
+
 	public ResourceManagerView() {
 		
 		requisitionService = new RequisitionServiceImpl();
 		employeeService = new EmployeeServiceImpl();
 		assignedService = new AssignedRequisitionServiceImpl();
+		projectService = new ProjectServiceImpl();
 	}
 
 	
@@ -97,11 +107,37 @@ public class ResourceManagerView implements View{
 		String skill;
 		String domain;
 		int required;
-		
+		List<ProjectBean> projectList;
+		try{
+			projectList = projectService.getProjectDetails();
+			printProjectList(projectList);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+			return;
+		}
 		try
 		{
-			out.print("\nEnter Project Id	:");
-			projectId = in.readLine();
+			boolean found;
+			do{
+				found=false;
+				out.print("\nEnter Project Id	:");
+				projectId = in.readLine();
+				for(ProjectBean projectBean : projectList )
+				{
+					if(projectBean.getProjectId().equals(projectId))
+					{
+						found=true;
+					}
+				}
+				if(!found)
+				{
+					System.out.println("Project With Project Id "+projectId+" not Available in List");
+				}
+			}while(!found);
+
 			out.print("\nEnter Vacancy Name :");
 			vacancyName = in.readLine();
 			out.print("\nEnter Skills    	:");
@@ -205,7 +241,6 @@ public class ResourceManagerView implements View{
 								empList.remove(emp);
 								requiredCount--;
 								
-								System.out.print(" selected list : "+selectedList.size()+" employee list : "+empList.size());
 								
 								System.out.print("\nEmployee "+response+" is Added to Selected.");
 							}
@@ -300,6 +335,20 @@ public class ResourceManagerView implements View{
 			System.out.print("\n");
 
 		return requisitionList;
+	}
+	
+	public void printProjectList(List<ProjectBean> projectList)
+	{
+		Header.printLine(); 
+		TTable<ProjectBean> table = new TTable<ProjectBean>();
+		table.addColumn("PROJECT ID","projectId",15);
+		table.addColumn("PROJECT NAME","projectName",15);
+		table.addColumn("DESCRIPTION","description",15);
+		table.addColumn("RM ID","rmId",15);
+		table.printHeader();
+		table.printBeans(projectList);
+		System.out.print("\n");
+		
 	}
 	
 	@Override

@@ -35,3 +35,4 @@ select * from assigned_requisition;
 
 Select distinct r.* from Requisition r,assigned_Requisition ar where r.requisition_id=ar.requisition_id and
 r.rm_id='103' ; 
+

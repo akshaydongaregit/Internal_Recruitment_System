@@ -26,7 +26,7 @@ public class UserServiceImpl implements IUserService {
 		if(validateUser(user))
 			return dao.createUser(user);
 		else 
-			throw new RecruitmentSystemException("Invalid Data");
+			throw new RecruitmentSystemException("Invalid Role");
 	}
 	
 	private boolean validateUser(UserBean user) throws RecruitmentSystemException
